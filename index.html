@@ -1,59 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neuroscope AI</title>
-  <style>
-    body { margin:0; font-family: Arial, sans-serif; background:#0b0f1a; color:white; }
-    header { padding:20px; text-align:center; background:#11182b; }
-    header h1 { margin:0; font-size:2.5em; }
-    nav a { margin:0 15px; color:#00f0ff; text-decoration:none; }
-    section { padding:60px 20px; text-align:center; }
-    .hero { background:linear-gradient(135deg,#0b0f1a,#1a2a4f); }
-    .btn { padding:10px 20px; background:#00f0ff; color:black; border:none; cursor:pointer; border-radius:5px; }
-    .card { background:#11182b; margin:20px; padding:20px; border-radius:10px; display:inline-block; width:250px; }
-    footer { background:#11182b; padding:20px; text-align:center; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neuroscope AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;background:#050816;color:#fff;overflow-x:hidden}
+
+canvas{position:fixed;top:0;left:0;z-index:-1}
+
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 50px;position:fixed;width:100%;background:rgba(0,0,0,0.6);backdrop-filter:blur(10px)}
+header h1{color:#00f0ff}
+nav a{margin-left:20px;color:#fff;text-decoration:none}
+
+.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.hero h2{font-size:3.5em}
+.hero span{color:#00f0ff}
+
+.btn{margin-top:20px;padding:12px 30px;background:#00f0ff;border:none;border-radius:30px;cursor:pointer}
+
+section{padding:100px 20px;text-align:center}
+.cards{display:flex;flex-wrap:wrap;justify-content:center}
+.card{background:#0b1f3a;margin:20px;padding:30px;border-radius:15px;width:260px;transition:.4s}
+.card:hover{transform:scale(1.05)}
+
+footer{background:#0b1f3a;padding:20px;text-align:center}
+
+/* Chatbot */
+.chatbot{
+ position:fixed;bottom:20px;right:20px;width:300px;
+ background:#0b1f3a;border-radius:15px;overflow:hidden;display:none
+}
+.chat-header{background:#00f0ff;color:#000;padding:10px;font-weight:bold}
+.chat-body{height:200px;padding:10px;overflow-y:auto;font-size:14px}
+.chat-input{display:flex}
+.chat-input input{flex:1;padding:10px;border:none}
+.chat-input button{padding:10px;background:#00f0ff;border:none}
+
+.chat-toggle{
+ position:fixed;bottom:20px;right:20px;
+ background:#00f0ff;color:#000;padding:15px;border-radius:50%;cursor:pointer
+}
+
+</style>
 </head>
 <body>
 
+<canvas id="bg"></canvas>
+
 <header>
-  <h1>Neuroscope AI</h1>
-  <nav>
-    <a href="#">Home</a>
-    <a href="#about">About</a>
-    <a href="#services">Services</a>
-    <a href="#contact">Contact</a>
-  </nav>
+<h1>Neuroscope AI</h1>
+<nav>
+<a href="#">Home</a>
+<a href="#about">About</a>
+<a href="#services">Services</a>
+<a href="#contact">Contact</a>
+</nav>
 </header>
 
 <section class="hero">
-  <h2>AI That Thinks, Decides & Acts</h2>
-  <p>Building the future with intelligent systems and automation.</p>
-  <button class="btn">Get Started</button>
+<h2>Future of <span>AI Intelligence</span></h2>
+<p>Think. Decide. Act.</p>
+<button class="btn">Get Started</button>
 </section>
 
 <section id="about">
-  <h2>About Us</h2>
-  <p>Neuroscope AI is an advanced AI enterprise combining agentic intelligence and physical automation to solve real-world problems.</p>
+<h2>About</h2>
+<p>Advanced AI enterprise combining intelligent agents and real-world automation.</p>
 </section>
 
 <section id="services">
-  <h2>Our Services</h2>
-  <div class="card">AI Automation</div>
-  <div class="card">Robotics Solutions</div>
-  <div class="card">Data Intelligence</div>
+<h2>Services</h2>
+<div class="cards">
+<div class="card">🤖 AI Automation</div>
+<div class="card">🧠 Smart Agents</div>
+<div class="card">⚙️ Robotics</div>
+<div class="card">📊 Data AI</div>
+</div>
 </section>
 
 <section id="contact">
-  <h2>Contact</h2>
-  <p>Email: contact@neuroscopeai.com</p>
+<h2>Contact</h2>
+<p>Email: contact@neuroscopeai.com</p>
 </section>
 
 <footer>
-  <p>© 2026 Neuroscope AI. All rights reserved.</p>
+<p>© 2026 Neuroscope AI 🚀</p>
 </footer>
+
+<!-- Chatbot UI -->
+<div class="chat-toggle" onclick="toggleChat()">💬</div>
+
+<div class="chatbot" id="chatbot">
+<div class="chat-header">AI Assistant</div>
+<div class="chat-body" id="chatBody"></div>
+<div class="chat-input">
+<input type="text" id="userInput" placeholder="Ask something...">
+<button onclick="sendMsg()">Send</button>
+</div>
+</div>
+
+<script>
+function toggleChat(){
+ let bot=document.getElementById('chatbot');
+ bot.style.display=bot.style.display==='block'?'none':'block';
+}
+
+function sendMsg(){
+ let input=document.getElementById('userInput');
+ let chat=document.getElementById('chatBody');
+ let msg=input.value;
+ if(msg==='') return;
+ chat.innerHTML += '<p><b>You:</b> '+msg+'</p>';
+
+ let reply='This is Neuroscope AI assistant 🤖';
+ if(msg.toLowerCase().includes('ai')) reply='We build powerful AI systems!';
+ if(msg.toLowerCase().includes('service')) reply='We offer AI, Robotics & Data solutions';
+
+ chat.innerHTML += '<p><b>Bot:</b> '+reply+'</p>';
+ input.value='';
+ chat.scrollTop=chat.scrollHeight;
+}
+
+// Background animation
+const canvas=document.getElementById('bg');
+const ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+let particles=[];
+for(let i=0;i<80;i++){
+particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2,dx:(Math.random()-0.5),dy:(Math.random()-0.5)});
+}
+function animate(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+particles.forEach(p=>{
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+ctx.fillStyle='#00f0ff';
+ctx.fill();
+p.x+=p.dx;p.y+=p.dy;
+if(p.x<0||p.x>canvas.width)p.dx*=-1;
+if(p.y<0||p.y>canvas.height)p.dy*=-1;
+});
+requestAnimationFrame(animate);
+}
+animate();
+</script>
 
 </body>
 </html>
